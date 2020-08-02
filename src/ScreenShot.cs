@@ -100,6 +100,22 @@ namespace Rooler {
 			}
 		}
 
+		private static IntRect scaledFullScreenBounds = new IntRect();
+		public static IntRect ScaledFullScreenBounds {
+			get {
+				if (fullScreenBounds.IsEmpty) {
+					IntRect fullBounds = new IntRect();
+					foreach (Screen screen in Screen.AllScreens) {
+						var scale = NativeMethods.GetScreenScale(screen);
+						fullBounds.Union(new IntRect((int)(screen.Bounds.Left / scale), (int)(screen.Bounds.Top / scale), (int)(screen.Bounds.Width / scale), (int)(screen.Bounds.Height / scale)));
+					}
+					scaledFullScreenBounds = fullBounds;
+				}
+
+				return scaledFullScreenBounds;
+			}
+		}
+
 		private void Init(BitmapSource bitmap) {
 			this.bitmap = bitmap;
 			this.pixels = new int[this.bitmap.PixelWidth * this.bitmap.PixelHeight];

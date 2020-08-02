@@ -40,7 +40,7 @@ namespace Rooler {
 
 			this.DataContext = this;
 
-			IntRect screenBounds = ScreenShot.FullScreenBounds;
+			IntRect screenBounds = ScreenShot.ScaledFullScreenBounds;
 			this.Top = screenBounds.Top;
 			this.Left = screenBounds.Left;
 			this.Width = screenBounds.Width;

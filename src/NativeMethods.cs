@@ -87,6 +87,27 @@ namespace Rooler {
 		[DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
 		private static extern bool BitBlt(IntPtr hDC, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
 
+		public enum DpiType
+        {
+			Effective = 0,
+			Angular = 1,
+			Raw = 2
+        }
+
+		public static double GetScreenScale(Screen screen)
+        {
+			var screenPoint = new System.Drawing.Point(screen.Bounds.Left + (screen.Bounds.Width / 2), screen.Bounds.Top + (screen.Bounds.Height / 2));
+			var monitor = MonitorFromPoint(screenPoint, 2 /* MONITOR_DEFAULTTONEAREST */);
+			GetDpiForMonitor(monitor, DpiType.Effective, out uint dpiX, out uint dpiY);
+			return dpiX / 96.0d;
+        }
+
+		[DllImport("User32.dll")]
+		private static extern IntPtr MonitorFromPoint([In] System.Drawing.Point pt, [In] uint dwFlags);
+
+		[DllImport("Shcore.dll")]
+		private static extern IntPtr GetDpiForMonitor([In] IntPtr hmonitor, [In] DpiType dpiType, [Out] out uint dpiX, [Out] out uint dpiY);
+
 
 		[return: MarshalAs(UnmanagedType.Bool)]
 		[DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
